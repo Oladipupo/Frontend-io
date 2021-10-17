@@ -22,9 +22,9 @@ export function init(settings = default_settings) {
 		amp: false,
 		dev: false,
 		entry: {
-			file: assets + "/_app/start-790f4740.js",
+			file: assets + "/_app/start-66916cb2.js",
 			css: [assets + "/_app/assets/start-464e9d0a.css"],
-			js: [assets + "/_app/start-790f4740.js",assets + "/_app/chunks/vendor-0d868d72.js"]
+			js: [assets + "/_app/start-66916cb2.js",assets + "/_app/chunks/vendor-0d868d72.js"]
 		},
 		fetched: undefined,
 		floc: false,
@@ -52,7 +52,21 @@ export function init(settings = default_settings) {
 	};
 }
 
-const d = decodeURIComponent;
+// input has already been decoded by decodeURI
+// now handle the rest that decodeURIComponent would do
+const d = s => s
+	.replace(/%23/g, '#')
+	.replace(/%3[Bb]/g, ';')
+	.replace(/%2[Cc]/g, ',')
+	.replace(/%2[Ff]/g, '/')
+	.replace(/%3[Ff]/g, '?')
+	.replace(/%3[Aa]/g, ':')
+	.replace(/%40/g, '@')
+	.replace(/%26/g, '&')
+	.replace(/%3[Dd]/g, '=')
+	.replace(/%2[Bb]/g, '+')
+	.replace(/%24/g, '$');
+
 const empty = () => ({});
 
 const manifest = {
@@ -111,7 +125,7 @@ const module_lookup = {
 	"src/routes/__layout.svelte": () => import("..\\..\\src\\routes\\__layout.svelte"),".svelte-kit/build/components/error.svelte": () => import("./components\\error.svelte"),"src/routes/index.svelte": () => import("..\\..\\src\\routes\\index.svelte"),"src/routes/projects.svelte": () => import("..\\..\\src\\routes\\projects.svelte"),"src/routes/music.svelte": () => import("..\\..\\src\\routes\\music.svelte"),"src/routes/other.svelte": () => import("..\\..\\src\\routes\\other.svelte"),"src/routes/art.svelte": () => import("..\\..\\src\\routes\\art.svelte")
 };
 
-const metadata_lookup = {"src/routes/__layout.svelte":{"entry":"pages/__layout.svelte-075e3acd.js","css":["assets/pages/__layout.svelte-8ee189c1.css"],"js":["pages/__layout.svelte-075e3acd.js","chunks/vendor-0d868d72.js"],"styles":[]},".svelte-kit/build/components/error.svelte":{"entry":"error.svelte-84b05a18.js","css":[],"js":["error.svelte-84b05a18.js","chunks/vendor-0d868d72.js"],"styles":[]},"src/routes/index.svelte":{"entry":"pages/index.svelte-f77ffc74.js","css":["assets/pages/index.svelte-1de6e17a.css","assets/footer-8107bb67.css"],"js":["pages/index.svelte-f77ffc74.js","chunks/vendor-0d868d72.js","chunks/footer-307d44f1.js","chunks/dbArt-b9c8fcdc.js","chunks/dbMusic-ce4f969e.js","chunks/dbProjects-a54810ee.js"],"styles":[]},"src/routes/projects.svelte":{"entry":"pages/projects.svelte-00d5fa49.js","css":["assets/pages/projects.svelte-7d2ac603.css","assets/footer-8107bb67.css"],"js":["pages/projects.svelte-00d5fa49.js","chunks/vendor-0d868d72.js","chunks/footer-307d44f1.js","chunks/dbProjects-a54810ee.js"],"styles":[]},"src/routes/music.svelte":{"entry":"pages/music.svelte-e1888047.js","css":["assets/pages/music.svelte-23dacfaa.css","assets/footer-8107bb67.css"],"js":["pages/music.svelte-e1888047.js","chunks/vendor-0d868d72.js","chunks/footer-307d44f1.js","chunks/dbMusic-ce4f969e.js"],"styles":[]},"src/routes/other.svelte":{"entry":"pages/other.svelte-af6a5c2c.js","css":["assets/pages/other.svelte-1ceca582.css","assets/footer-8107bb67.css"],"js":["pages/other.svelte-af6a5c2c.js","chunks/vendor-0d868d72.js","chunks/footer-307d44f1.js"],"styles":[]},"src/routes/art.svelte":{"entry":"pages/art.svelte-91be3176.js","css":["assets/pages/art.svelte-cc6c1208.css","assets/footer-8107bb67.css"],"js":["pages/art.svelte-91be3176.js","chunks/vendor-0d868d72.js","chunks/footer-307d44f1.js","chunks/dbArt-b9c8fcdc.js"],"styles":[]}};
+const metadata_lookup = {"src/routes/__layout.svelte":{"entry":"pages/__layout.svelte-7be65399.js","css":["assets/pages/__layout.svelte-8ee189c1.css"],"js":["pages/__layout.svelte-7be65399.js","chunks/vendor-0d868d72.js"],"styles":[]},".svelte-kit/build/components/error.svelte":{"entry":"error.svelte-84b05a18.js","css":[],"js":["error.svelte-84b05a18.js","chunks/vendor-0d868d72.js"],"styles":[]},"src/routes/index.svelte":{"entry":"pages/index.svelte-46398c3e.js","css":["assets/pages/index.svelte-1de6e17a.css","assets/footer-8107bb67.css"],"js":["pages/index.svelte-46398c3e.js","chunks/vendor-0d868d72.js","chunks/footer-a9ee1005.js","chunks/dbArt-b9c8fcdc.js","chunks/dbMusic-ce4f969e.js","chunks/dbProjects-a54810ee.js"],"styles":[]},"src/routes/projects.svelte":{"entry":"pages/projects.svelte-10b60770.js","css":["assets/pages/projects.svelte-7d2ac603.css","assets/footer-8107bb67.css"],"js":["pages/projects.svelte-10b60770.js","chunks/vendor-0d868d72.js","chunks/footer-a9ee1005.js","chunks/dbProjects-a54810ee.js"],"styles":[]},"src/routes/music.svelte":{"entry":"pages/music.svelte-a8945714.js","css":["assets/pages/music.svelte-23dacfaa.css","assets/footer-8107bb67.css"],"js":["pages/music.svelte-a8945714.js","chunks/vendor-0d868d72.js","chunks/footer-a9ee1005.js","chunks/dbMusic-ce4f969e.js"],"styles":[]},"src/routes/other.svelte":{"entry":"pages/other.svelte-a15056f3.js","css":["assets/pages/other.svelte-1ceca582.css","assets/footer-8107bb67.css"],"js":["pages/other.svelte-a15056f3.js","chunks/vendor-0d868d72.js","chunks/footer-a9ee1005.js"],"styles":[]},"src/routes/art.svelte":{"entry":"pages/art.svelte-ac755492.js","css":["assets/pages/art.svelte-cc6c1208.css","assets/footer-8107bb67.css"],"js":["pages/art.svelte-ac755492.js","chunks/vendor-0d868d72.js","chunks/footer-a9ee1005.js","chunks/dbArt-b9c8fcdc.js"],"styles":[]}};
 
 async function load_component(file) {
 	const { entry, css, js, styles } = metadata_lookup[file];

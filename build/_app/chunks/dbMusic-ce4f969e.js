@@ -1,1 +1,1 @@
-import{C as a}from"./vendor-0d868d72.js";const i=a([]);(async()=>{const a=await fetch("https://oladipupo.io/api/v1/getmusic"),t=(await a.json()).map(((a,i)=>({name:a.name,img:a.img,link:a.link})));i.set(t)})();export{i as m};
+import{C as o}from"./vendor-0d868d72.js";const e=o([]),n=async()=>{const s=(await(await fetch("https://oladipupo.io/api/v1/getmusic")).json()).map((t,r)=>({name:t.name,img:t.img,link:t.link}));e.set(s)};n();export{e as m};
