@@ -1,0 +1,38 @@
+{
+	"name": "porfolio",
+	"version": "0.0.1",
+	"scripts": {
+		"dev": "svelte-kit dev",
+		"build": "svelte-kit build",
+		"preview": "svelte-kit preview",
+		"check": "svelte-check --tsconfig ./tsconfig.json",
+		"check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
+		"lint": "prettier --ignore-path .gitignore --check --plugin-search-dir=. .",
+		"format": "prettier --ignore-path .gitignore --write --plugin-search-dir=. ."
+	},
+	"devDependencies": {
+		"@sveltejs/adapter-netlify": "^1.0.0-next.33",
+		"@sveltejs/adapter-node": "^1.0.0-next.55",
+		"@sveltejs/adapter-static": "^1.0.0-next.21",
+		"@sveltejs/kit": "next",
+		"@types/jquery": "^3.5.6",
+		"autoprefixer": "^10.3.4",
+		"cssnano": "^5.0.8",
+		"postcss": "^8.3.6",
+		"postcss-load-config": "^3.1.0",
+		"prettier": "~2.2.1",
+		"prettier-plugin-svelte": "^2.2.0",
+		"svelte": "^3.34.0",
+		"svelte-check": "^2.0.0",
+		"svelte-preprocess": "^4.9.4",
+		"tailwindcss": "^2.2.15",
+		"tslib": "^2.0.0",
+		"typescript": "^4.0.0"
+	},
+	"type": "module",
+	"dependencies": {
+		"@sendinblue/client": "^3.0.1",
+		"sib-api-v3-sdk": "^8.2.1",
+		"sib-api-v3-typescript": "^2.2.2"
+	}
+}
