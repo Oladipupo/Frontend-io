@@ -22,9 +22,9 @@ var __toModule = (module2) => {
   return __reExport(__markAsModule(__defProp(module2 != null ? __create(__getProtoOf(module2)) : {}, "default", module2 && module2.__esModule && "default" in module2 ? { get: () => module2.default, enumerable: true } : { value: module2, enumerable: true })), module2);
 };
 
-// .svelte-kit/netlify/entry.js
+// .svelte-kit/vercel/entry.js
 __export(exports, {
-  handler: () => handler
+  default: () => entry_default
 });
 
 // node_modules/@sveltejs/kit/dist/install-fetch.js
@@ -4662,6 +4662,46 @@ function fixResponseChunkedTransferBadEnding(request, errorCallback) {
   });
 }
 
+// node_modules/@sveltejs/kit/dist/node.js
+function getRawBody(req) {
+  return new Promise((fulfil, reject) => {
+    const h = req.headers;
+    if (!h["content-type"]) {
+      return fulfil(null);
+    }
+    req.on("error", reject);
+    const length = Number(h["content-length"]);
+    if (isNaN(length) && h["transfer-encoding"] == null) {
+      return fulfil(null);
+    }
+    let data = new Uint8Array(length || 0);
+    if (length > 0) {
+      let offset = 0;
+      req.on("data", (chunk) => {
+        const new_len = offset + Buffer.byteLength(chunk);
+        if (new_len > length) {
+          return reject({
+            status: 413,
+            reason: 'Exceeded "Content-Length" limit'
+          });
+        }
+        data.set(chunk, offset);
+        offset = new_len;
+      });
+    } else {
+      req.on("data", (chunk) => {
+        const new_data = new Uint8Array(data.length + chunk.length);
+        new_data.set(data, 0);
+        new_data.set(chunk, data.length);
+        data = new_data;
+      });
+    }
+    req.on("end", () => {
+      fulfil(data);
+    });
+  });
+}
+
 // .svelte-kit/output/server/app.js
 var __accessCheck = (obj, member, msg) => {
   if (!member.has(obj))
@@ -4723,12 +4763,12 @@ function is_content_type_textual(content_type) {
 }
 async function render_endpoint(request, route, match) {
   const mod = await route.load();
-  const handler2 = mod[request.method.toLowerCase().replace("delete", "del")];
-  if (!handler2) {
+  const handler = mod[request.method.toLowerCase().replace("delete", "del")];
+  if (!handler) {
     return;
   }
   const params = route.params(match);
-  const response = await handler2({ ...request, params });
+  const response = await handler({ ...request, params });
   const preface = `Invalid response from route ${request.path}`;
   if (!response) {
     return;
@@ -6645,47 +6685,29 @@ var art = /* @__PURE__ */ Object.freeze({
   "default": Art
 });
 
-// .svelte-kit/netlify/entry.js
+// .svelte-kit/vercel/entry.js
 init();
-async function handler(event) {
-  const { path, httpMethod, headers, rawQuery, body, isBase64Encoded } = event;
-  const query = new URLSearchParams(rawQuery);
-  const encoding = isBase64Encoded ? "base64" : headers["content-encoding"] || "utf-8";
-  const rawBody = typeof body === "string" ? Buffer.from(body, encoding) : body;
+var entry_default = async (req, res) => {
+  const { pathname, searchParams } = new URL(req.url || "", "http://localhost");
+  let body;
+  try {
+    body = await getRawBody(req);
+  } catch (err) {
+    res.statusCode = err.status || 400;
+    return res.end(err.reason || "Invalid request body");
+  }
   const rendered = await render({
-    method: httpMethod,
-    headers,
-    path,
-    query,
-    rawBody
+    method: req.method,
+    headers: req.headers,
+    path: pathname,
+    query: searchParams,
+    rawBody: body
   });
   if (rendered) {
-    return {
-      isBase64Encoded: false,
-      statusCode: rendered.status,
-      ...splitHeaders(rendered.headers),
-      body: rendered.body
-    };
+    const { status, headers, body: body2 } = rendered;
+    return res.writeHead(status, headers).end(body2);
   }
-  return {
-    statusCode: 404,
-    body: "Not found"
-  };
-}
-function splitHeaders(headers) {
-  const h = {};
-  const m = {};
-  for (const key in headers) {
-    const value = headers[key];
-    const target = Array.isArray(value) ? m : h;
-    target[key] = value;
-  }
-  return {
-    headers: h,
-    multiValueHeaders: m
-  };
-}
+  return res.writeHead(404).end();
+};
 // Annotate the CommonJS export names for ESM import in node:
-0 && (module.exports = {
-  handler
-});
+0 && (module.exports = {});
