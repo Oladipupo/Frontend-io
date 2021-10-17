@@ -24,6 +24,8 @@
 		"prettier": "~2.2.1",
 		"prettier-plugin-svelte": "^2.2.0",
 		"svelte": "^3.34.0",
+		"svelte-adapter-deno": "^0.3.1",
+		"svelte-adapter-firebase": "^0.13.1",
 		"svelte-check": "^2.0.0",
 		"svelte-preprocess": "^4.9.4",
 		"tailwindcss": "^2.2.15",
@@ -32,6 +34,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@architect/sveltekit-adapter": "0.0.4",
 		"@sendinblue/client": "^3.0.1",
 		"sib-api-v3-sdk": "^8.2.1",
 		"sib-api-v3-typescript": "^2.2.2"
