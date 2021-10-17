@@ -1455,9 +1455,9 @@ function init(settings = default_settings) {
     amp: false,
     dev: false,
     entry: {
-      file: assets + "/_app/start-66916cb2.js",
+      file: assets + "/_app/start-5d362253.js",
       css: [assets + "/_app/assets/start-464e9d0a.css"],
-      js: [assets + "/_app/start-66916cb2.js", assets + "/_app/chunks/vendor-0d868d72.js"]
+      js: [assets + "/_app/start-5d362253.js", assets + "/_app/chunks/vendor-0d868d72.js"]
     },
     fetched: void 0,
     floc: false,
@@ -1556,7 +1556,7 @@ const module_lookup = {
     return art;
   })
 };
-const metadata_lookup = { "src/routes/__layout.svelte": { "entry": "pages/__layout.svelte-7be65399.js", "css": ["assets/pages/__layout.svelte-8ee189c1.css"], "js": ["pages/__layout.svelte-7be65399.js", "chunks/vendor-0d868d72.js"], "styles": [] }, ".svelte-kit/build/components/error.svelte": { "entry": "error.svelte-84b05a18.js", "css": [], "js": ["error.svelte-84b05a18.js", "chunks/vendor-0d868d72.js"], "styles": [] }, "src/routes/index.svelte": { "entry": "pages/index.svelte-46398c3e.js", "css": ["assets/pages/index.svelte-1de6e17a.css", "assets/footer-8107bb67.css"], "js": ["pages/index.svelte-46398c3e.js", "chunks/vendor-0d868d72.js", "chunks/footer-a9ee1005.js", "chunks/dbArt-b9c8fcdc.js", "chunks/dbMusic-ce4f969e.js", "chunks/dbProjects-a54810ee.js"], "styles": [] }, "src/routes/projects.svelte": { "entry": "pages/projects.svelte-10b60770.js", "css": ["assets/pages/projects.svelte-7d2ac603.css", "assets/footer-8107bb67.css"], "js": ["pages/projects.svelte-10b60770.js", "chunks/vendor-0d868d72.js", "chunks/footer-a9ee1005.js", "chunks/dbProjects-a54810ee.js"], "styles": [] }, "src/routes/music.svelte": { "entry": "pages/music.svelte-a8945714.js", "css": ["assets/pages/music.svelte-23dacfaa.css", "assets/footer-8107bb67.css"], "js": ["pages/music.svelte-a8945714.js", "chunks/vendor-0d868d72.js", "chunks/footer-a9ee1005.js", "chunks/dbMusic-ce4f969e.js"], "styles": [] }, "src/routes/other.svelte": { "entry": "pages/other.svelte-a15056f3.js", "css": ["assets/pages/other.svelte-1ceca582.css", "assets/footer-8107bb67.css"], "js": ["pages/other.svelte-a15056f3.js", "chunks/vendor-0d868d72.js", "chunks/footer-a9ee1005.js"], "styles": [] }, "src/routes/art.svelte": { "entry": "pages/art.svelte-ac755492.js", "css": ["assets/pages/art.svelte-cc6c1208.css", "assets/footer-8107bb67.css"], "js": ["pages/art.svelte-ac755492.js", "chunks/vendor-0d868d72.js", "chunks/footer-a9ee1005.js", "chunks/dbArt-b9c8fcdc.js"], "styles": [] } };
+const metadata_lookup = { "src/routes/__layout.svelte": { "entry": "pages/__layout.svelte-7be65399.js", "css": ["assets/pages/__layout.svelte-8ee189c1.css"], "js": ["pages/__layout.svelte-7be65399.js", "chunks/vendor-0d868d72.js"], "styles": [] }, ".svelte-kit/build/components/error.svelte": { "entry": "error.svelte-84b05a18.js", "css": [], "js": ["error.svelte-84b05a18.js", "chunks/vendor-0d868d72.js"], "styles": [] }, "src/routes/index.svelte": { "entry": "pages/index.svelte-4433f5da.js", "css": ["assets/pages/index.svelte-7777cb9c.css", "assets/footer-8107bb67.css"], "js": ["pages/index.svelte-4433f5da.js", "chunks/vendor-0d868d72.js", "chunks/footer-a9ee1005.js", "chunks/dbArt-b9c8fcdc.js", "chunks/dbMusic-ce4f969e.js", "chunks/dbProjects-a54810ee.js"], "styles": [] }, "src/routes/projects.svelte": { "entry": "pages/projects.svelte-10b60770.js", "css": ["assets/pages/projects.svelte-7d2ac603.css", "assets/footer-8107bb67.css"], "js": ["pages/projects.svelte-10b60770.js", "chunks/vendor-0d868d72.js", "chunks/footer-a9ee1005.js", "chunks/dbProjects-a54810ee.js"], "styles": [] }, "src/routes/music.svelte": { "entry": "pages/music.svelte-a8945714.js", "css": ["assets/pages/music.svelte-23dacfaa.css", "assets/footer-8107bb67.css"], "js": ["pages/music.svelte-a8945714.js", "chunks/vendor-0d868d72.js", "chunks/footer-a9ee1005.js", "chunks/dbMusic-ce4f969e.js"], "styles": [] }, "src/routes/other.svelte": { "entry": "pages/other.svelte-a15056f3.js", "css": ["assets/pages/other.svelte-1ceca582.css", "assets/footer-8107bb67.css"], "js": ["pages/other.svelte-a15056f3.js", "chunks/vendor-0d868d72.js", "chunks/footer-a9ee1005.js"], "styles": [] }, "src/routes/art.svelte": { "entry": "pages/art.svelte-ac755492.js", "css": ["assets/pages/art.svelte-cc6c1208.css", "assets/footer-8107bb67.css"], "js": ["pages/art.svelte-ac755492.js", "chunks/vendor-0d868d72.js", "chunks/footer-a9ee1005.js", "chunks/dbArt-b9c8fcdc.js"], "styles": [] } };
 async function load_component(file) {
   const { entry, css: css2, js, styles } = metadata_lookup[file];
   return {
@@ -1646,7 +1646,6 @@ const Footer = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   return `<div class="${"wrapper svelte-1tjht53"}"><p class="${"svelte-1tjht53"}">Oladipupo Ogundipe Copyright\xA9 2021</p>
 </div>`;
 });
-var dbConnectionTest_svelte_svelte_type_style_lang = "";
 const subscriber_queue = [];
 function writable(value, start = noop) {
   let stop;
@@ -1855,7 +1854,7 @@ const projects$1 = writable([]);
 var index_svelte_svelte_type_style_lang = "";
 const css$4 = {
   code: "div.svelte-3mxne4{background-color:#000;margin:0 auto;min-height:1400px;text-align:center}",
-  map: `{"version":3,"file":"index.svelte","sources":["index.svelte"],"sourcesContent":["<script lang=\\"ts\\">import Hello from '../components/hello.svelte';\\r\\nimport Header from \\"../components/header.svelte\\";\\r\\nimport Footer from \\"../components/footer.svelte\\";\\r\\nimport '../components/dbConnectionTest.svelte';\\r\\nimport Introduction from '../components/introduction.svelte';\\r\\nimport Contactme from '../components/contactme.svelte';\\r\\nimport Socials from '../components/socials.svelte';\\r\\nimport { pieces } from \\"../stores/dbArt\\";\\r\\nimport { music } from \\"../stores/dbMusic\\";\\r\\nimport { projects } from \\"../stores/dbProjects\\";\\r\\nfunction load() {\\r\\n    $pieces;\\r\\n    $music;\\r\\n    $projects;\\r\\n}\\r\\nload();\\r\\n<\/script>\\n\\n<Header></Header>\\n<div>\\n  <Hello />\\n  <Introduction />\\n  <Socials />\\n  <Contactme />\\n\\n</div>\\n <!--<DbConnectionTest />-->\\n  \\n  \\n  \\n <Footer></Footer>\\n  <style>div{background-color:#000;margin:0 auto;min-height:1400px;text-align:center}</style>\\n  "],"names":[],"mappings":"AA+BS,iBAAG,CAAC,iBAAiB,IAAI,CAAC,OAAO,CAAC,CAAC,IAAI,CAAC,WAAW,MAAM,CAAC,WAAW,MAAM,CAAC"}`
+  map: `{"version":3,"file":"index.svelte","sources":["index.svelte"],"sourcesContent":["<script lang=\\"ts\\">import Hello from '../components/hello.svelte';\\r\\nimport Header from \\"../components/header.svelte\\";\\r\\nimport Footer from \\"../components/footer.svelte\\";\\r\\nimport Introduction from '../components/introduction.svelte';\\r\\nimport Contactme from '../components/contactme.svelte';\\r\\nimport Socials from '../components/socials.svelte';\\r\\nimport { pieces } from \\"../stores/dbArt\\";\\r\\nimport { music } from \\"../stores/dbMusic\\";\\r\\nimport { projects } from \\"../stores/dbProjects\\";\\r\\nfunction load() {\\r\\n    $pieces;\\r\\n    $music;\\r\\n    $projects;\\r\\n}\\r\\nload();\\r\\n<\/script>\\n\\n<Header></Header>\\n<div>\\n  <Hello />\\n  <Introduction />\\n  <Socials />\\n  <Contactme />\\n\\n</div>\\n\\n  \\n  \\n  \\n <Footer></Footer>\\n  <style>div{background-color:#000;margin:0 auto;min-height:1400px;text-align:center}</style>\\n  "],"names":[],"mappings":"AA8BS,iBAAG,CAAC,iBAAiB,IAAI,CAAC,OAAO,CAAC,CAAC,IAAI,CAAC,WAAW,MAAM,CAAC,WAAW,MAAM,CAAC"}`
 };
 const Routes = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $$unsubscribe_projects;
@@ -1873,7 +1872,7 @@ const Routes = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   ${validate_component(Introduction, "Introduction").$$render($$result, {}, {}, {})}
   ${validate_component(Socials, "Socials").$$render($$result, {}, {}, {})}
   ${validate_component(Contactme, "Contactme").$$render($$result, {}, {}, {})}</div>
- 
+
   
   
   

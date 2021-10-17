@@ -2,7 +2,6 @@
 import Hello from '../components/hello.svelte';
 import Header from "../components/header.svelte";
 import Footer from "../components/footer.svelte";
-import DbConnectionTest from '../components/dbConnectionTest.svelte';
 import Introduction from '../components/introduction.svelte';
 import Contactme from '../components/contactme.svelte';
 import Socials from '../components/socials.svelte';
@@ -26,7 +25,7 @@ load()
   <Contactme />
 
 </div>
- <!--<DbConnectionTest />-->
+
   
   
   
