@@ -1,1 +1,0 @@
-import{C as a}from"./vendor-0d868d72.js";const i=a([]);(async()=>{const a=await fetch("https://oladipupo.io/api/v1/getmusic"),t=(await a.json()).map(((a,i)=>({name:a.name,img:a.img,link:a.link})));i.set(t)})();export{i as m};
