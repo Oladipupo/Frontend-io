@@ -1,40 +1,34 @@
-var __create = Object.create;
 var __defProp = Object.defineProperty;
-var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
-var __getOwnPropNames = Object.getOwnPropertyNames;
-var __getProtoOf = Object.getPrototypeOf;
+var __defProps = Object.defineProperties;
+var __getOwnPropDescs = Object.getOwnPropertyDescriptors;
+var __getOwnPropSymbols = Object.getOwnPropertySymbols;
 var __hasOwnProp = Object.prototype.hasOwnProperty;
-var __markAsModule = (target) => __defProp(target, "__esModule", { value: true });
-var __export = (target, all) => {
-  __markAsModule(target);
-  for (var name in all)
-    __defProp(target, name, { get: all[name], enumerable: true });
+var __propIsEnum = Object.prototype.propertyIsEnumerable;
+var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __spreadValues = (a, b) => {
+  for (var prop in b || (b = {}))
+    if (__hasOwnProp.call(b, prop))
+      __defNormalProp(a, prop, b[prop]);
+  if (__getOwnPropSymbols)
+    for (var prop of __getOwnPropSymbols(b)) {
+      if (__propIsEnum.call(b, prop))
+        __defNormalProp(a, prop, b[prop]);
+    }
+  return a;
 };
-var __reExport = (target, module2, desc) => {
-  if (module2 && typeof module2 === "object" || typeof module2 === "function") {
-    for (let key of __getOwnPropNames(module2))
-      if (!__hasOwnProp.call(target, key) && key !== "default")
-        __defProp(target, key, { get: () => module2[key], enumerable: !(desc = __getOwnPropDesc(module2, key)) || desc.enumerable });
-  }
-  return target;
-};
-var __toModule = (module2) => {
-  return __reExport(__markAsModule(__defProp(module2 != null ? __create(__getProtoOf(module2)) : {}, "default", module2 && module2.__esModule && "default" in module2 ? { get: () => module2.default, enumerable: true } : { value: module2, enumerable: true })), module2);
-};
+var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
 
-// .svelte-kit/netlify/entry.js
-__export(exports, {
-  handler: () => handler
-});
+// node_modules/@sveltejs/adapter-node/files/shims.js
+import { createRequire } from "module";
 
 // node_modules/@sveltejs/kit/dist/install-fetch.js
-var import_http = __toModule(require("http"));
-var import_https = __toModule(require("https"));
-var import_zlib = __toModule(require("zlib"));
-var import_stream = __toModule(require("stream"));
-var import_util = __toModule(require("util"));
-var import_crypto = __toModule(require("crypto"));
-var import_url = __toModule(require("url"));
+import http from "http";
+import https from "https";
+import zlib from "zlib";
+import Stream, { PassThrough, pipeline } from "stream";
+import { types } from "util";
+import { randomBytes } from "crypto";
+import { format } from "url";
 function dataUriToBuffer(uri) {
   if (!/^data:/i.test(uri)) {
     throw new TypeError('`uri` does not appear to be a Data URI (must begin with "data:")');
@@ -73,7 +67,7 @@ function dataUriToBuffer(uri) {
 }
 var src = dataUriToBuffer;
 var dataUriToBuffer$1 = src;
-var { Readable } = import_stream.default;
+var { Readable } = Stream;
 var wm = new WeakMap();
 async function* read(parts) {
   for (const part of parts) {
@@ -221,7 +215,7 @@ function getHeader(boundary, name, field) {
   }
   return `${header}${carriage.repeat(2)}`;
 }
-var getBoundary = () => (0, import_crypto.randomBytes)(8).toString("hex");
+var getBoundary = () => randomBytes(8).toString("hex");
 async function* formDataIterator(form, boundary) {
   for (const [name, value] of form) {
     yield getHeader(boundary, name, value);
@@ -262,15 +256,15 @@ var Body = class {
       ;
     else if (Buffer.isBuffer(body))
       ;
-    else if (import_util.types.isAnyArrayBuffer(body)) {
+    else if (types.isAnyArrayBuffer(body)) {
       body = Buffer.from(body);
     } else if (ArrayBuffer.isView(body)) {
       body = Buffer.from(body.buffer, body.byteOffset, body.byteLength);
-    } else if (body instanceof import_stream.default)
+    } else if (body instanceof Stream)
       ;
     else if (isFormData(body)) {
       boundary = `NodeFetchFormDataBoundary${getBoundary()}`;
-      body = import_stream.default.Readable.from(formDataIterator(body, boundary));
+      body = Stream.Readable.from(formDataIterator(body, boundary));
     } else {
       body = Buffer.from(String(body));
     }
@@ -281,7 +275,7 @@ var Body = class {
       error: null
     };
     this.size = size;
-    if (body instanceof import_stream.default) {
+    if (body instanceof Stream) {
       body.on("error", (err) => {
         const error2 = err instanceof FetchBaseError ? err : new FetchError(`Invalid response body while trying to fetch ${this.url}: ${err.message}`, "system", err);
         this[INTERNALS$2].error = error2;
@@ -343,7 +337,7 @@ async function consumeBody(data) {
   if (Buffer.isBuffer(body)) {
     return body;
   }
-  if (!(body instanceof import_stream.default)) {
+  if (!(body instanceof Stream)) {
     return Buffer.alloc(0);
   }
   const accum = [];
@@ -385,9 +379,9 @@ var clone = (instance, highWaterMark) => {
   if (instance.bodyUsed) {
     throw new Error("cannot clone body after it is used");
   }
-  if (body instanceof import_stream.default && typeof body.getBoundary !== "function") {
-    p1 = new import_stream.PassThrough({ highWaterMark });
-    p2 = new import_stream.PassThrough({ highWaterMark });
+  if (body instanceof Stream && typeof body.getBoundary !== "function") {
+    p1 = new PassThrough({ highWaterMark });
+    p2 = new PassThrough({ highWaterMark });
     body.pipe(p1);
     body.pipe(p2);
     instance[INTERNALS$2].body = p1;
@@ -408,7 +402,7 @@ var extractContentType = (body, request) => {
   if (isBlob(body)) {
     return body.type || null;
   }
-  if (Buffer.isBuffer(body) || import_util.types.isAnyArrayBuffer(body) || ArrayBuffer.isView(body)) {
+  if (Buffer.isBuffer(body) || types.isAnyArrayBuffer(body) || ArrayBuffer.isView(body)) {
     return null;
   }
   if (body && typeof body.getBoundary === "function") {
@@ -417,7 +411,7 @@ var extractContentType = (body, request) => {
   if (isFormData(body)) {
     return `multipart/form-data; boundary=${request[INTERNALS$2].boundary}`;
   }
-  if (body instanceof import_stream.default) {
+  if (body instanceof Stream) {
     return null;
   }
   return "text/plain;charset=UTF-8";
@@ -453,14 +447,14 @@ var writeToStream = (dest, { body }) => {
     body.pipe(dest);
   }
 };
-var validateHeaderName = typeof import_http.default.validateHeaderName === "function" ? import_http.default.validateHeaderName : (name) => {
+var validateHeaderName = typeof http.validateHeaderName === "function" ? http.validateHeaderName : (name) => {
   if (!/^[\^`\-\w!#$%&'*+.|~]+$/.test(name)) {
     const err = new TypeError(`Header name must be a valid HTTP token [${name}]`);
     Object.defineProperty(err, "code", { value: "ERR_INVALID_HTTP_TOKEN" });
     throw err;
   }
 };
-var validateHeaderValue = typeof import_http.default.validateHeaderValue === "function" ? import_http.default.validateHeaderValue : (name, value) => {
+var validateHeaderValue = typeof http.validateHeaderValue === "function" ? http.validateHeaderValue : (name, value) => {
   if (/[^\t\u0020-\u007E\u0080-\u00FF]/.test(value)) {
     const err = new TypeError(`Invalid character in header content ["${name}"]`);
     Object.defineProperty(err, "code", { value: "ERR_INVALID_CHAR" });
@@ -477,7 +471,7 @@ var Headers = class extends URLSearchParams {
       }
     } else if (init2 == null)
       ;
-    else if (typeof init2 === "object" && !import_util.types.isBoxedPrimitive(init2)) {
+    else if (typeof init2 === "object" && !types.isBoxedPrimitive(init2)) {
       const method = init2[Symbol.iterator];
       if (method == null) {
         result.push(...Object.entries(init2));
@@ -486,7 +480,7 @@ var Headers = class extends URLSearchParams {
           throw new TypeError("Header pairs must be iterable");
         }
         result = [...init2].map((pair) => {
-          if (typeof pair !== "object" || import_util.types.isBoxedPrimitive(pair)) {
+          if (typeof pair !== "object" || types.isBoxedPrimitive(pair)) {
             throw new TypeError("Each header pair must be an iterable object");
           }
           return [...pair];
@@ -750,7 +744,7 @@ var Request = class extends Body {
     return this[INTERNALS].method;
   }
   get url() {
-    return (0, import_url.format)(this[INTERNALS].parsedURL);
+    return format(this[INTERNALS].parsedURL);
   }
   get headers() {
     return this[INTERNALS].headers;
@@ -833,7 +827,7 @@ var AbortError = class extends FetchBaseError {
 };
 var supportedSchemas = new Set(["data:", "http:", "https:"]);
 async function fetch(url, options_) {
-  return new Promise((resolve2, reject) => {
+  return new Promise((resolve3, reject) => {
     const request = new Request(url, options_);
     const options2 = getNodeRequestOptions(request);
     if (!supportedSchemas.has(options2.protocol)) {
@@ -842,16 +836,16 @@ async function fetch(url, options_) {
     if (options2.protocol === "data:") {
       const data = dataUriToBuffer$1(request.url);
       const response2 = new Response(data, { headers: { "Content-Type": data.typeFull } });
-      resolve2(response2);
+      resolve3(response2);
       return;
     }
-    const send = (options2.protocol === "https:" ? import_https.default : import_http.default).request;
+    const send2 = (options2.protocol === "https:" ? https : http).request;
     const { signal } = request;
     let response = null;
     const abort = () => {
       const error2 = new AbortError("The operation was aborted.");
       reject(error2);
-      if (request.body && request.body instanceof import_stream.default.Readable) {
+      if (request.body && request.body instanceof Stream.Readable) {
         request.body.destroy(error2);
       }
       if (!response || !response.body) {
@@ -867,7 +861,7 @@ async function fetch(url, options_) {
       abort();
       finalize();
     };
-    const request_ = send(options2);
+    const request_ = send2(options2);
     if (signal) {
       signal.addEventListener("abort", abortAndFinalize);
     }
@@ -921,7 +915,7 @@ async function fetch(url, options_) {
               signal: request.signal,
               size: request.size
             };
-            if (response_.statusCode !== 303 && request.body && options_.body instanceof import_stream.default.Readable) {
+            if (response_.statusCode !== 303 && request.body && options_.body instanceof Stream.Readable) {
               reject(new FetchError("Cannot follow redirect with body being a readable stream", "unsupported-redirect"));
               finalize();
               return;
@@ -931,7 +925,7 @@ async function fetch(url, options_) {
               requestOptions.body = void 0;
               requestOptions.headers.delete("content-length");
             }
-            resolve2(fetch(new Request(locationURL, requestOptions)));
+            resolve3(fetch(new Request(locationURL, requestOptions)));
             finalize();
             return;
           }
@@ -942,7 +936,7 @@ async function fetch(url, options_) {
           signal.removeEventListener("abort", abortAndFinalize);
         }
       });
-      let body = (0, import_stream.pipeline)(response_, new import_stream.PassThrough(), (error2) => {
+      let body = pipeline(response_, new PassThrough(), (error2) => {
         reject(error2);
       });
       if (process.version < "v12.10") {
@@ -960,54 +954,60 @@ async function fetch(url, options_) {
       const codings = headers.get("Content-Encoding");
       if (!request.compress || request.method === "HEAD" || codings === null || response_.statusCode === 204 || response_.statusCode === 304) {
         response = new Response(body, responseOptions);
-        resolve2(response);
+        resolve3(response);
         return;
       }
       const zlibOptions = {
-        flush: import_zlib.default.Z_SYNC_FLUSH,
-        finishFlush: import_zlib.default.Z_SYNC_FLUSH
+        flush: zlib.Z_SYNC_FLUSH,
+        finishFlush: zlib.Z_SYNC_FLUSH
       };
       if (codings === "gzip" || codings === "x-gzip") {
-        body = (0, import_stream.pipeline)(body, import_zlib.default.createGunzip(zlibOptions), (error2) => {
+        body = pipeline(body, zlib.createGunzip(zlibOptions), (error2) => {
           reject(error2);
         });
         response = new Response(body, responseOptions);
-        resolve2(response);
+        resolve3(response);
         return;
       }
       if (codings === "deflate" || codings === "x-deflate") {
-        const raw = (0, import_stream.pipeline)(response_, new import_stream.PassThrough(), (error2) => {
+        const raw = pipeline(response_, new PassThrough(), (error2) => {
           reject(error2);
         });
         raw.once("data", (chunk) => {
           if ((chunk[0] & 15) === 8) {
-            body = (0, import_stream.pipeline)(body, import_zlib.default.createInflate(), (error2) => {
+            body = pipeline(body, zlib.createInflate(), (error2) => {
               reject(error2);
             });
           } else {
-            body = (0, import_stream.pipeline)(body, import_zlib.default.createInflateRaw(), (error2) => {
+            body = pipeline(body, zlib.createInflateRaw(), (error2) => {
               reject(error2);
             });
           }
           response = new Response(body, responseOptions);
-          resolve2(response);
+          resolve3(response);
         });
         return;
       }
       if (codings === "br") {
-        body = (0, import_stream.pipeline)(body, import_zlib.default.createBrotliDecompress(), (error2) => {
+        body = pipeline(body, zlib.createBrotliDecompress(), (error2) => {
           reject(error2);
         });
         response = new Response(body, responseOptions);
-        resolve2(response);
+        resolve3(response);
         return;
       }
       response = new Response(body, responseOptions);
-      resolve2(response);
+      resolve3(response);
     });
     writeToStream(request_, request);
   });
 }
+
+// node_modules/@sveltejs/adapter-node/files/shims.js
+Object.defineProperty(globalThis, "require", {
+  enumerable: true,
+  value: createRequire(import.meta.url)
+});
 
 // .svelte-kit/output/server/app.js
 var __accessCheck = (obj, member, msg) => {
@@ -1067,12 +1067,12 @@ function is_content_type_textual(content_type) {
 }
 async function render_endpoint(request, route, match) {
   const mod = await route.load();
-  const handler2 = mod[request.method.toLowerCase().replace("delete", "del")];
-  if (!handler2) {
+  const handler = mod[request.method.toLowerCase().replace("delete", "del")];
+  if (!handler) {
     return;
   }
   const params = route.params(match);
-  const response = await handler2({ ...request, params });
+  const response = await handler(__spreadProps(__spreadValues({}, request), { params }));
   const preface = `Invalid response from route ${request.path}`;
   if (!response) {
     return;
@@ -1089,7 +1089,7 @@ async function render_endpoint(request, route, match) {
   }
   let normalized_body;
   if ((typeof body === "object" || typeof body === "undefined") && !(body instanceof Uint8Array) && (!type || type.startsWith("application/json"))) {
-    headers = { ...headers, "content-type": "application/json; charset=utf-8" };
+    headers = __spreadProps(__spreadValues({}, headers), { "content-type": "application/json; charset=utf-8" });
     normalized_body = JSON.stringify(typeof body === "undefined" ? {} : body);
   } else {
     normalized_body = body;
@@ -1533,7 +1533,7 @@ function serialize_error(error2) {
   let serialized = try_serialize(error2);
   if (!serialized) {
     const { name, message, stack } = error2;
-    serialized = try_serialize({ ...error2, name, message, stack });
+    serialized = try_serialize(__spreadProps(__spreadValues({}, error2), { name, message, stack }));
   }
   if (!serialized) {
     serialized = "{}";
@@ -1595,7 +1595,7 @@ async function load_node({
   status,
   error: error2
 }) {
-  const { module: module2 } = node;
+  const { module } = node;
   let uses_credentials = false;
   const fetched = [];
   let loaded2;
@@ -1607,7 +1607,7 @@ async function load_node({
       return Reflect.get(target, prop, receiver);
     }
   });
-  if (module2.load) {
+  if (module.load) {
     const load_input = {
       page: page_proxy,
       get session() {
@@ -1620,7 +1620,7 @@ async function load_node({
           url = resource;
         } else {
           url = resource.url;
-          opts = {
+          opts = __spreadValues({
             method: resource.method,
             headers: resource.headers,
             body: resource.body,
@@ -1629,9 +1629,8 @@ async function load_node({
             cache: resource.cache,
             redirect: resource.redirect,
             referrer: resource.referrer,
-            integrity: resource.integrity,
-            ...opts
-          };
+            integrity: resource.integrity
+          }, opts);
         }
         const resolved = resolve(request.path, url.split("?")[0]);
         let response;
@@ -1644,9 +1643,7 @@ async function load_node({
           }) : await fetch(`http://${page.host}/${asset.file}`, opts);
         } else if (resolved.startsWith("/") && !resolved.startsWith("//")) {
           const relative = resolved;
-          const headers = {
-            ...opts.headers
-          };
+          const headers = __spreadValues({}, opts.headers);
           if (opts.credentials !== "omit") {
             uses_credentials = true;
             headers.cookie = request.headers.cookie;
@@ -1687,10 +1684,9 @@ async function load_node({
             const [server_hostname] = request.host.split(":");
             if (`.${fetch_hostname}`.endsWith(`.${server_hostname}`) && opts.credentials !== "omit") {
               uses_credentials = true;
-              opts.headers = {
-                ...opts.headers,
+              opts.headers = __spreadProps(__spreadValues({}, opts.headers), {
                 cookie: request.headers.cookie
-              };
+              });
             }
           }
           const external_request = new Request(url, opts);
@@ -1732,13 +1728,13 @@ async function load_node({
           status: 404
         });
       },
-      context: { ...context }
+      context: __spreadValues({}, context)
     };
     if (is_error) {
       load_input.status = status;
       load_input.error = error2;
     }
-    loaded2 = await module2.load.call(null, load_input);
+    loaded2 = await module.load.call(null, load_input);
   } else {
     loaded2 = {};
   }
@@ -1921,14 +1917,13 @@ async function respond$1(opts) {
         let loaded2;
         if (node) {
           try {
-            loaded2 = await load_node({
-              ...opts,
+            loaded2 = await load_node(__spreadProps(__spreadValues({}, opts), {
               node,
               context,
               prerender_enabled: is_prerender_enabled(options2, node, state),
               is_leaf: i === nodes.length - 1,
               is_error: false
-            });
+            }));
             if (!loaded2)
               return;
             if (loaded2.loaded.redirect) {
@@ -1961,8 +1956,7 @@ async function respond$1(opts) {
                   j -= 1;
                 }
                 try {
-                  const error_loaded = await load_node({
-                    ...opts,
+                  const error_loaded = await load_node(__spreadProps(__spreadValues({}, opts), {
                     node: error_node,
                     context: node_loaded.context,
                     prerender_enabled: is_prerender_enabled(options2, error_node, state),
@@ -1970,7 +1964,7 @@ async function respond$1(opts) {
                     is_error: true,
                     status,
                     error: error2
-                  });
+                  }));
                   if (error_loaded.loaded.error) {
                     continue;
                   }
@@ -1995,29 +1989,24 @@ async function respond$1(opts) {
           }
         }
         if (loaded2 && loaded2.loaded.context) {
-          context = {
-            ...context,
-            ...loaded2.loaded.context
-          };
+          context = __spreadValues(__spreadValues({}, context), loaded2.loaded.context);
         }
       }
     }
   try {
-    return await render_response({
-      ...opts,
+    return await render_response(__spreadProps(__spreadValues({}, opts), {
       page_config,
       status,
       error: error2,
       branch: branch.filter(Boolean)
-    });
+    }));
   } catch (err) {
     const error3 = coalesce_to_error(err);
     options2.handle_error(error3, request);
-    return await respond_with_error({
-      ...opts,
+    return await respond_with_error(__spreadProps(__spreadValues({}, opts), {
       status: 500,
       error: error3
-    });
+    }));
   }
 }
 function get_page_config(leaf, options2) {
@@ -2205,13 +2194,12 @@ async function respond(incoming, options2, state = {}) {
     }
   }
   const headers = lowercase_keys(incoming.headers);
-  const request = {
-    ...incoming,
+  const request = __spreadProps(__spreadValues({}, incoming), {
     headers,
     body: parse_body(incoming.rawBody, headers),
     params: {},
     locals: {}
-  };
+  });
   try {
     return await options2.hooks.handle({
       request,
@@ -2415,9 +2403,9 @@ ${``}`;
 });
 var base = "";
 var assets = "";
-function set_paths(paths) {
-  base = paths.base;
-  assets = paths.assets || base;
+function set_paths(paths2) {
+  base = paths2.base;
+  assets = paths2.assets || base;
 }
 function set_prerendering(value) {
 }
@@ -2460,7 +2448,7 @@ function init(settings = default_settings) {
     service_worker: null,
     router: true,
     ssr: true,
-    target: null,
+    target: "#svelte",
     template,
     trailing_slash: "never"
   };
@@ -2510,7 +2498,7 @@ var manifest = {
 };
 var get_hooks = (hooks) => ({
   getSession: hooks.getSession || (() => ({})),
-  handle: hooks.handle || (({ request, resolve: resolve2 }) => resolve2(request)),
+  handle: hooks.handle || (({ request, resolve: resolve22 }) => resolve22(request)),
   handleError: hooks.handleError || (({ error: error2 }) => console.error(error2.stack)),
   externalFetch: hooks.externalFetch || fetch
 });
@@ -2552,7 +2540,7 @@ function render(request, {
   prerender
 } = {}) {
   const host = request.headers["host"];
-  return respond({ ...request, host }, options, { prerender });
+  return respond(__spreadProps(__spreadValues({}, request), { host }), options, { prerender });
 }
 var css$b = {
   code: ":root{background-color:#000;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Cantarell,Open Sans,Helvetica Neue,sans-serif,Courier New,monospace}.spacing.svelte-t4nk2{margin-top:300px}",
@@ -2675,11 +2663,11 @@ var Introduction = create_ssr_component(($$result, $$props, $$bindings, slots) =
   $$unsubscribe_loaded = subscribe(loaded, (value) => $loaded = value);
   var __awaiter = function(thisArg, _arguments, P, generator) {
     function adopt(value) {
-      return value instanceof P ? value : new P(function(resolve2) {
-        resolve2(value);
+      return value instanceof P ? value : new P(function(resolve22) {
+        resolve22(value);
       });
     }
-    return new (P || (P = Promise))(function(resolve2, reject) {
+    return new (P || (P = Promise))(function(resolve22, reject) {
       function fulfilled(value) {
         try {
           step(generator.next(value));
@@ -2695,7 +2683,7 @@ var Introduction = create_ssr_component(($$result, $$props, $$bindings, slots) =
         }
       }
       function step(result) {
-        result.done ? resolve2(result.value) : adopt(result.value).then(fulfilled, rejected);
+        result.done ? resolve22(result.value) : adopt(result.value).then(fulfilled, rejected);
       }
       step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
@@ -2734,11 +2722,11 @@ var Contactme = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$unsubscribe_loaded = subscribe(loaded, (value) => value);
   (function(thisArg, _arguments, P, generator) {
     function adopt(value) {
-      return value instanceof P ? value : new P(function(resolve2) {
-        resolve2(value);
+      return value instanceof P ? value : new P(function(resolve22) {
+        resolve22(value);
       });
     }
-    return new (P || (P = Promise))(function(resolve2, reject) {
+    return new (P || (P = Promise))(function(resolve22, reject) {
       function fulfilled(value) {
         try {
           step(generator.next(value));
@@ -2754,7 +2742,7 @@ var Contactme = create_ssr_component(($$result, $$props, $$bindings, slots) => {
         }
       }
       function step(result) {
-        result.done ? resolve2(result.value) : adopt(result.value).then(fulfilled, rejected);
+        result.done ? resolve22(result.value) : adopt(result.value).then(fulfilled, rejected);
       }
       step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
@@ -2962,47 +2950,362 @@ var art = /* @__PURE__ */ Object.freeze({
   "default": Art
 });
 
-// .svelte-kit/netlify/entry.js
-init();
-async function handler(event) {
-  const { path, httpMethod, headers, rawQuery, body, isBase64Encoded } = event;
-  const query = new URLSearchParams(rawQuery);
-  const encoding = isBase64Encoded ? "base64" : headers["content-encoding"] || "utf-8";
-  const rawBody = typeof body === "string" ? Buffer.from(body, encoding) : body;
-  const rendered = await render({
-    method: httpMethod,
-    headers,
-    path,
-    query,
-    rawBody
+// .svelte-kit/node/middlewares.js
+import {
+  createReadStream,
+  existsSync,
+  statSync
+} from "fs";
+import fs__default, { readdirSync, statSync as statSync2 } from "fs";
+import { resolve as resolve2, join, normalize as normalize2, dirname } from "path";
+import {
+  parse
+} from "querystring";
+import { fileURLToPath } from "url";
+function getRawBody(req) {
+  return new Promise((fulfil, reject) => {
+    const h = req.headers;
+    if (!h["content-type"]) {
+      return fulfil(null);
+    }
+    req.on("error", reject);
+    const length = Number(h["content-length"]);
+    if (isNaN(length) && h["transfer-encoding"] == null) {
+      return fulfil(null);
+    }
+    let data = new Uint8Array(length || 0);
+    if (length > 0) {
+      let offset = 0;
+      req.on("data", (chunk) => {
+        const new_len = offset + Buffer.byteLength(chunk);
+        if (new_len > length) {
+          return reject({
+            status: 413,
+            reason: 'Exceeded "Content-Length" limit'
+          });
+        }
+        data.set(chunk, offset);
+        offset = new_len;
+      });
+    } else {
+      req.on("data", (chunk) => {
+        const new_data = new Uint8Array(data.length + chunk.length);
+        new_data.set(data, 0);
+        new_data.set(chunk, data.length);
+        data = new_data;
+      });
+    }
+    req.on("end", () => {
+      fulfil(data);
+    });
   });
-  if (rendered) {
-    return {
-      isBase64Encoded: false,
-      statusCode: rendered.status,
-      ...splitHeaders(rendered.headers),
-      body: rendered.body
-    };
-  }
-  return {
-    statusCode: 404,
-    body: "Not found"
+}
+function create_kit_middleware({ render: render2 }) {
+  return async (req, res) => {
+    let parsed;
+    try {
+      parsed = new URL(req.url || "", "http://localhost");
+    } catch (e) {
+      res.statusCode = 400;
+      return res.end("Invalid URL");
+    }
+    let body;
+    try {
+      body = await getRawBody(req);
+    } catch (err) {
+      res.statusCode = err.status || 400;
+      return res.end(err.reason || "Invalid request body");
+    }
+    const rendered = await render2({
+      method: req.method,
+      headers: req.headers,
+      path: parsed.pathname,
+      query: parsed.searchParams,
+      rawBody: body
+    });
+    if (rendered) {
+      res.writeHead(rendered.status, rendered.headers);
+      if (rendered.body) {
+        res.write(rendered.body);
+      }
+      res.end();
+    } else {
+      res.statusCode = 404;
+      res.end("Not found");
+    }
   };
 }
-function splitHeaders(headers) {
-  const h = {};
-  const m = {};
-  for (const key in headers) {
-    const value = headers[key];
-    const target = Array.isArray(value) ? m : h;
-    target[key] = value;
+function parse2(req) {
+  let raw = req.url;
+  if (raw == null)
+    return;
+  let prev = req._parsedUrl;
+  if (prev && prev.raw === raw)
+    return prev;
+  let pathname = raw, search = "", query;
+  if (raw.length > 1) {
+    let idx = raw.indexOf("?", 1);
+    if (idx !== -1) {
+      search = raw.substring(idx);
+      pathname = raw.substring(0, idx);
+      if (search.length > 1) {
+        query = parse(search.substring(1));
+      }
+    }
   }
-  return {
-    headers: h,
-    multiValueHeaders: m
+  return req._parsedUrl = { pathname, search, query, raw };
+}
+function list(dir, callback, pre = "") {
+  dir = resolve2(".", dir);
+  let arr = readdirSync(dir);
+  let i = 0, abs, stats;
+  for (; i < arr.length; i++) {
+    abs = join(dir, arr[i]);
+    stats = statSync2(abs);
+    stats.isDirectory() ? list(abs, callback, join(pre, arr[i])) : callback(join(pre, arr[i]), abs, stats);
+  }
+}
+function Mime$1() {
+  this._types = Object.create(null);
+  this._extensions = Object.create(null);
+  for (let i = 0; i < arguments.length; i++) {
+    this.define(arguments[i]);
+  }
+  this.define = this.define.bind(this);
+  this.getType = this.getType.bind(this);
+  this.getExtension = this.getExtension.bind(this);
+}
+Mime$1.prototype.define = function(typeMap, force) {
+  for (let type in typeMap) {
+    let extensions = typeMap[type].map(function(t) {
+      return t.toLowerCase();
+    });
+    type = type.toLowerCase();
+    for (let i = 0; i < extensions.length; i++) {
+      const ext = extensions[i];
+      if (ext[0] === "*") {
+        continue;
+      }
+      if (!force && ext in this._types) {
+        throw new Error('Attempt to change mapping for "' + ext + '" extension from "' + this._types[ext] + '" to "' + type + '". Pass `force=true` to allow this, otherwise remove "' + ext + '" from the list of extensions for "' + type + '".');
+      }
+      this._types[ext] = type;
+    }
+    if (force || !this._extensions[type]) {
+      const ext = extensions[0];
+      this._extensions[type] = ext[0] !== "*" ? ext : ext.substr(1);
+    }
+  }
+};
+Mime$1.prototype.getType = function(path) {
+  path = String(path);
+  let last = path.replace(/^.*[/\\]/, "").toLowerCase();
+  let ext = last.replace(/^.*\./, "").toLowerCase();
+  let hasPath = last.length < path.length;
+  let hasDot = ext.length < last.length - 1;
+  return (hasDot || !hasPath) && this._types[ext] || null;
+};
+Mime$1.prototype.getExtension = function(type) {
+  type = /^\s*([^;\s]*)/.test(type) && RegExp.$1;
+  return type && this._extensions[type.toLowerCase()] || null;
+};
+var Mime_1 = Mime$1;
+var standard = { "application/andrew-inset": ["ez"], "application/applixware": ["aw"], "application/atom+xml": ["atom"], "application/atomcat+xml": ["atomcat"], "application/atomdeleted+xml": ["atomdeleted"], "application/atomsvc+xml": ["atomsvc"], "application/atsc-dwd+xml": ["dwd"], "application/atsc-held+xml": ["held"], "application/atsc-rsat+xml": ["rsat"], "application/bdoc": ["bdoc"], "application/calendar+xml": ["xcs"], "application/ccxml+xml": ["ccxml"], "application/cdfx+xml": ["cdfx"], "application/cdmi-capability": ["cdmia"], "application/cdmi-container": ["cdmic"], "application/cdmi-domain": ["cdmid"], "application/cdmi-object": ["cdmio"], "application/cdmi-queue": ["cdmiq"], "application/cu-seeme": ["cu"], "application/dash+xml": ["mpd"], "application/davmount+xml": ["davmount"], "application/docbook+xml": ["dbk"], "application/dssc+der": ["dssc"], "application/dssc+xml": ["xdssc"], "application/ecmascript": ["ecma", "es"], "application/emma+xml": ["emma"], "application/emotionml+xml": ["emotionml"], "application/epub+zip": ["epub"], "application/exi": ["exi"], "application/fdt+xml": ["fdt"], "application/font-tdpfr": ["pfr"], "application/geo+json": ["geojson"], "application/gml+xml": ["gml"], "application/gpx+xml": ["gpx"], "application/gxf": ["gxf"], "application/gzip": ["gz"], "application/hjson": ["hjson"], "application/hyperstudio": ["stk"], "application/inkml+xml": ["ink", "inkml"], "application/ipfix": ["ipfix"], "application/its+xml": ["its"], "application/java-archive": ["jar", "war", "ear"], "application/java-serialized-object": ["ser"], "application/java-vm": ["class"], "application/javascript": ["js", "mjs"], "application/json": ["json", "map"], "application/json5": ["json5"], "application/jsonml+json": ["jsonml"], "application/ld+json": ["jsonld"], "application/lgr+xml": ["lgr"], "application/lost+xml": ["lostxml"], "application/mac-binhex40": ["hqx"], "application/mac-compactpro": ["cpt"], "application/mads+xml": ["mads"], "application/manifest+json": ["webmanifest"], "application/marc": ["mrc"], "application/marcxml+xml": ["mrcx"], "application/mathematica": ["ma", "nb", "mb"], "application/mathml+xml": ["mathml"], "application/mbox": ["mbox"], "application/mediaservercontrol+xml": ["mscml"], "application/metalink+xml": ["metalink"], "application/metalink4+xml": ["meta4"], "application/mets+xml": ["mets"], "application/mmt-aei+xml": ["maei"], "application/mmt-usd+xml": ["musd"], "application/mods+xml": ["mods"], "application/mp21": ["m21", "mp21"], "application/mp4": ["mp4s", "m4p"], "application/mrb-consumer+xml": ["*xdf"], "application/mrb-publish+xml": ["*xdf"], "application/msword": ["doc", "dot"], "application/mxf": ["mxf"], "application/n-quads": ["nq"], "application/n-triples": ["nt"], "application/node": ["cjs"], "application/octet-stream": ["bin", "dms", "lrf", "mar", "so", "dist", "distz", "pkg", "bpk", "dump", "elc", "deploy", "exe", "dll", "deb", "dmg", "iso", "img", "msi", "msp", "msm", "buffer"], "application/oda": ["oda"], "application/oebps-package+xml": ["opf"], "application/ogg": ["ogx"], "application/omdoc+xml": ["omdoc"], "application/onenote": ["onetoc", "onetoc2", "onetmp", "onepkg"], "application/oxps": ["oxps"], "application/p2p-overlay+xml": ["relo"], "application/patch-ops-error+xml": ["*xer"], "application/pdf": ["pdf"], "application/pgp-encrypted": ["pgp"], "application/pgp-signature": ["asc", "sig"], "application/pics-rules": ["prf"], "application/pkcs10": ["p10"], "application/pkcs7-mime": ["p7m", "p7c"], "application/pkcs7-signature": ["p7s"], "application/pkcs8": ["p8"], "application/pkix-attr-cert": ["ac"], "application/pkix-cert": ["cer"], "application/pkix-crl": ["crl"], "application/pkix-pkipath": ["pkipath"], "application/pkixcmp": ["pki"], "application/pls+xml": ["pls"], "application/postscript": ["ai", "eps", "ps"], "application/provenance+xml": ["provx"], "application/pskc+xml": ["pskcxml"], "application/raml+yaml": ["raml"], "application/rdf+xml": ["rdf", "owl"], "application/reginfo+xml": ["rif"], "application/relax-ng-compact-syntax": ["rnc"], "application/resource-lists+xml": ["rl"], "application/resource-lists-diff+xml": ["rld"], "application/rls-services+xml": ["rs"], "application/route-apd+xml": ["rapd"], "application/route-s-tsid+xml": ["sls"], "application/route-usd+xml": ["rusd"], "application/rpki-ghostbusters": ["gbr"], "application/rpki-manifest": ["mft"], "application/rpki-roa": ["roa"], "application/rsd+xml": ["rsd"], "application/rss+xml": ["rss"], "application/rtf": ["rtf"], "application/sbml+xml": ["sbml"], "application/scvp-cv-request": ["scq"], "application/scvp-cv-response": ["scs"], "application/scvp-vp-request": ["spq"], "application/scvp-vp-response": ["spp"], "application/sdp": ["sdp"], "application/senml+xml": ["senmlx"], "application/sensml+xml": ["sensmlx"], "application/set-payment-initiation": ["setpay"], "application/set-registration-initiation": ["setreg"], "application/shf+xml": ["shf"], "application/sieve": ["siv", "sieve"], "application/smil+xml": ["smi", "smil"], "application/sparql-query": ["rq"], "application/sparql-results+xml": ["srx"], "application/srgs": ["gram"], "application/srgs+xml": ["grxml"], "application/sru+xml": ["sru"], "application/ssdl+xml": ["ssdl"], "application/ssml+xml": ["ssml"], "application/swid+xml": ["swidtag"], "application/tei+xml": ["tei", "teicorpus"], "application/thraud+xml": ["tfi"], "application/timestamped-data": ["tsd"], "application/toml": ["toml"], "application/ttml+xml": ["ttml"], "application/ubjson": ["ubj"], "application/urc-ressheet+xml": ["rsheet"], "application/urc-targetdesc+xml": ["td"], "application/voicexml+xml": ["vxml"], "application/wasm": ["wasm"], "application/widget": ["wgt"], "application/winhlp": ["hlp"], "application/wsdl+xml": ["wsdl"], "application/wspolicy+xml": ["wspolicy"], "application/xaml+xml": ["xaml"], "application/xcap-att+xml": ["xav"], "application/xcap-caps+xml": ["xca"], "application/xcap-diff+xml": ["xdf"], "application/xcap-el+xml": ["xel"], "application/xcap-error+xml": ["xer"], "application/xcap-ns+xml": ["xns"], "application/xenc+xml": ["xenc"], "application/xhtml+xml": ["xhtml", "xht"], "application/xliff+xml": ["xlf"], "application/xml": ["xml", "xsl", "xsd", "rng"], "application/xml-dtd": ["dtd"], "application/xop+xml": ["xop"], "application/xproc+xml": ["xpl"], "application/xslt+xml": ["*xsl", "xslt"], "application/xspf+xml": ["xspf"], "application/xv+xml": ["mxml", "xhvml", "xvml", "xvm"], "application/yang": ["yang"], "application/yin+xml": ["yin"], "application/zip": ["zip"], "audio/3gpp": ["*3gpp"], "audio/adpcm": ["adp"], "audio/amr": ["amr"], "audio/basic": ["au", "snd"], "audio/midi": ["mid", "midi", "kar", "rmi"], "audio/mobile-xmf": ["mxmf"], "audio/mp3": ["*mp3"], "audio/mp4": ["m4a", "mp4a"], "audio/mpeg": ["mpga", "mp2", "mp2a", "mp3", "m2a", "m3a"], "audio/ogg": ["oga", "ogg", "spx", "opus"], "audio/s3m": ["s3m"], "audio/silk": ["sil"], "audio/wav": ["wav"], "audio/wave": ["*wav"], "audio/webm": ["weba"], "audio/xm": ["xm"], "font/collection": ["ttc"], "font/otf": ["otf"], "font/ttf": ["ttf"], "font/woff": ["woff"], "font/woff2": ["woff2"], "image/aces": ["exr"], "image/apng": ["apng"], "image/avif": ["avif"], "image/bmp": ["bmp"], "image/cgm": ["cgm"], "image/dicom-rle": ["drle"], "image/emf": ["emf"], "image/fits": ["fits"], "image/g3fax": ["g3"], "image/gif": ["gif"], "image/heic": ["heic"], "image/heic-sequence": ["heics"], "image/heif": ["heif"], "image/heif-sequence": ["heifs"], "image/hej2k": ["hej2"], "image/hsj2": ["hsj2"], "image/ief": ["ief"], "image/jls": ["jls"], "image/jp2": ["jp2", "jpg2"], "image/jpeg": ["jpeg", "jpg", "jpe"], "image/jph": ["jph"], "image/jphc": ["jhc"], "image/jpm": ["jpm"], "image/jpx": ["jpx", "jpf"], "image/jxr": ["jxr"], "image/jxra": ["jxra"], "image/jxrs": ["jxrs"], "image/jxs": ["jxs"], "image/jxsc": ["jxsc"], "image/jxsi": ["jxsi"], "image/jxss": ["jxss"], "image/ktx": ["ktx"], "image/ktx2": ["ktx2"], "image/png": ["png"], "image/sgi": ["sgi"], "image/svg+xml": ["svg", "svgz"], "image/t38": ["t38"], "image/tiff": ["tif", "tiff"], "image/tiff-fx": ["tfx"], "image/webp": ["webp"], "image/wmf": ["wmf"], "message/disposition-notification": ["disposition-notification"], "message/global": ["u8msg"], "message/global-delivery-status": ["u8dsn"], "message/global-disposition-notification": ["u8mdn"], "message/global-headers": ["u8hdr"], "message/rfc822": ["eml", "mime"], "model/3mf": ["3mf"], "model/gltf+json": ["gltf"], "model/gltf-binary": ["glb"], "model/iges": ["igs", "iges"], "model/mesh": ["msh", "mesh", "silo"], "model/mtl": ["mtl"], "model/obj": ["obj"], "model/stl": ["stl"], "model/vrml": ["wrl", "vrml"], "model/x3d+binary": ["*x3db", "x3dbz"], "model/x3d+fastinfoset": ["x3db"], "model/x3d+vrml": ["*x3dv", "x3dvz"], "model/x3d+xml": ["x3d", "x3dz"], "model/x3d-vrml": ["x3dv"], "text/cache-manifest": ["appcache", "manifest"], "text/calendar": ["ics", "ifb"], "text/coffeescript": ["coffee", "litcoffee"], "text/css": ["css"], "text/csv": ["csv"], "text/html": ["html", "htm", "shtml"], "text/jade": ["jade"], "text/jsx": ["jsx"], "text/less": ["less"], "text/markdown": ["markdown", "md"], "text/mathml": ["mml"], "text/mdx": ["mdx"], "text/n3": ["n3"], "text/plain": ["txt", "text", "conf", "def", "list", "log", "in", "ini"], "text/richtext": ["rtx"], "text/rtf": ["*rtf"], "text/sgml": ["sgml", "sgm"], "text/shex": ["shex"], "text/slim": ["slim", "slm"], "text/spdx": ["spdx"], "text/stylus": ["stylus", "styl"], "text/tab-separated-values": ["tsv"], "text/troff": ["t", "tr", "roff", "man", "me", "ms"], "text/turtle": ["ttl"], "text/uri-list": ["uri", "uris", "urls"], "text/vcard": ["vcard"], "text/vtt": ["vtt"], "text/xml": ["*xml"], "text/yaml": ["yaml", "yml"], "video/3gpp": ["3gp", "3gpp"], "video/3gpp2": ["3g2"], "video/h261": ["h261"], "video/h263": ["h263"], "video/h264": ["h264"], "video/iso.segment": ["m4s"], "video/jpeg": ["jpgv"], "video/jpm": ["*jpm", "jpgm"], "video/mj2": ["mj2", "mjp2"], "video/mp2t": ["ts"], "video/mp4": ["mp4", "mp4v", "mpg4"], "video/mpeg": ["mpeg", "mpg", "mpe", "m1v", "m2v"], "video/ogg": ["ogv"], "video/quicktime": ["qt", "mov"], "video/webm": ["webm"] };
+var Mime = Mime_1;
+var lite = new Mime(standard);
+var noop2 = () => {
+};
+function isMatch(uri, arr) {
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i].test(uri))
+      return true;
+  }
+}
+function toAssume(uri, extns) {
+  let i = 0, x, len = uri.length - 1;
+  if (uri.charCodeAt(len) === 47) {
+    uri = uri.substring(0, len);
+  }
+  let arr = [], tmp = `${uri}/index`;
+  for (; i < extns.length; i++) {
+    x = extns[i] ? `.${extns[i]}` : "";
+    if (uri)
+      arr.push(uri + x);
+    arr.push(tmp + x);
+  }
+  return arr;
+}
+function viaCache(cache, uri, extns) {
+  let i = 0, data, arr = toAssume(uri, extns);
+  for (; i < arr.length; i++) {
+    if (data = cache[arr[i]])
+      return data;
+  }
+}
+function viaLocal(dir, isEtag, uri, extns) {
+  let i = 0, arr = toAssume(uri, extns);
+  let abs, stats, name, headers;
+  for (; i < arr.length; i++) {
+    abs = normalize2(join(dir, name = arr[i]));
+    if (abs.startsWith(dir) && existsSync(abs)) {
+      stats = statSync(abs);
+      if (stats.isDirectory())
+        continue;
+      headers = toHeaders(name, stats, isEtag);
+      headers["Cache-Control"] = isEtag ? "no-cache" : "no-store";
+      return { abs, stats, headers };
+    }
+  }
+}
+function is404(req, res) {
+  return res.statusCode = 404, res.end();
+}
+function send(req, res, file, stats, headers) {
+  let code = 200, tmp, opts = {};
+  headers = __spreadValues({}, headers);
+  for (let key in headers) {
+    tmp = res.getHeader(key);
+    if (tmp)
+      headers[key] = tmp;
+  }
+  if (tmp = res.getHeader("content-type")) {
+    headers["Content-Type"] = tmp;
+  }
+  if (req.headers.range) {
+    code = 206;
+    let [x, y] = req.headers.range.replace("bytes=", "").split("-");
+    let end = opts.end = parseInt(y, 10) || stats.size - 1;
+    let start = opts.start = parseInt(x, 10) || 0;
+    if (start >= stats.size || end >= stats.size) {
+      res.setHeader("Content-Range", `bytes */${stats.size}`);
+      res.statusCode = 416;
+      return res.end();
+    }
+    headers["Content-Range"] = `bytes ${start}-${end}/${stats.size}`;
+    headers["Content-Length"] = end - start + 1;
+    headers["Accept-Ranges"] = "bytes";
+  }
+  res.writeHead(code, headers);
+  createReadStream(file, opts).pipe(res);
+}
+function isEncoding(name, type, headers) {
+  headers["Content-Encoding"] = type;
+  headers["Content-Type"] = lite.getType(name.replace(/\.([^.]*)$/, "")) || "";
+}
+function toHeaders(name, stats, isEtag) {
+  let headers = {
+    "Content-Length": stats.size,
+    "Content-Type": lite.getType(name) || "",
+    "Last-Modified": stats.mtime.toUTCString()
+  };
+  if (isEtag)
+    headers["ETag"] = `W/"${stats.size}-${stats.mtime.getTime()}"`;
+  if (/\.br$/.test(name))
+    isEncoding(name, "br", headers);
+  if (/\.gz$/.test(name))
+    isEncoding(name, "gzip", headers);
+  return headers;
+}
+function sirv(dir, opts = {}) {
+  dir = resolve2(dir || ".");
+  let isNotFound = opts.onNoMatch || is404;
+  let setHeaders = opts.setHeaders || noop2;
+  let extensions = opts.extensions || ["html", "htm"];
+  let gzips = opts.gzip && extensions.map((x) => `${x}.gz`).concat("gz");
+  let brots = opts.brotli && extensions.map((x) => `${x}.br`).concat("br");
+  const FILES = {};
+  let fallback = "/";
+  let isEtag = !!opts.etag;
+  let isSPA = !!opts.single;
+  if (typeof opts.single === "string") {
+    let idx = opts.single.lastIndexOf(".");
+    fallback += !!~idx ? opts.single.substring(0, idx) : opts.single;
+  }
+  let ignores = [];
+  if (opts.ignores !== false) {
+    ignores.push(/[/]([A-Za-z\s\d~$._-]+\.\w+){1,}$/);
+    if (opts.dotfiles)
+      ignores.push(/\/\.\w/);
+    else
+      ignores.push(/\/\.well-known/);
+    [].concat(opts.ignores || []).forEach((x) => {
+      ignores.push(new RegExp(x, "i"));
+    });
+  }
+  let cc = opts.maxAge != null && `public,max-age=${opts.maxAge}`;
+  if (cc && opts.immutable)
+    cc += ",immutable";
+  else if (cc && opts.maxAge === 0)
+    cc += ",must-revalidate";
+  if (!opts.dev) {
+    list(dir, (name, abs, stats) => {
+      if (/\.well-known[\\+\/]/.test(name))
+        ;
+      else if (!opts.dotfiles && /(^\.|[\\+|\/+]\.)/.test(name))
+        return;
+      let headers = toHeaders(name, stats, isEtag);
+      if (cc)
+        headers["Cache-Control"] = cc;
+      FILES["/" + name.normalize().replace(/\\+/g, "/")] = { abs, stats, headers };
+    });
+  }
+  let lookup = opts.dev ? viaLocal.bind(0, dir, isEtag) : viaCache.bind(0, FILES);
+  return function(req, res, next) {
+    let extns = [""];
+    let pathname = parse2(req).pathname;
+    let val = req.headers["accept-encoding"] || "";
+    if (gzips && val.includes("gzip"))
+      extns.unshift(...gzips);
+    if (brots && /(br|brotli)/i.test(val))
+      extns.unshift(...brots);
+    extns.push(...extensions);
+    if (pathname.indexOf("%") !== -1) {
+      try {
+        pathname = decodeURIComponent(pathname);
+      } catch (err) {
+      }
+    }
+    let data = lookup(pathname, extns) || isSPA && !isMatch(pathname, ignores) && lookup(fallback, extns);
+    if (!data)
+      return next ? next() : isNotFound(req, res);
+    if (isEtag && req.headers["if-none-match"] === data.headers["ETag"]) {
+      res.writeHead(304);
+      return res.end();
+    }
+    if (gzips || brots) {
+      res.setHeader("Vary", "Accept-Encoding");
+    }
+    setHeaders(res, pathname, data.stats);
+    send(req, res, data.abs, data.stats, data.headers);
   };
 }
-// Annotate the CommonJS export names for ESM import in node:
-0 && (module.exports = {
-  handler
-});
+var __dirname = dirname(fileURLToPath(import.meta.url));
+var noop_handler = (_req, _res, next) => next();
+var paths = {
+  assets: join(__dirname, "/assets"),
+  prerendered: join(__dirname, "/prerendered")
+};
+var prerenderedMiddleware = fs__default.existsSync(paths.prerendered) ? sirv(paths.prerendered, {
+  etag: true,
+  maxAge: 0,
+  gzip: true,
+  brotli: true
+}) : noop_handler;
+var assetsMiddleware = fs__default.existsSync(paths.assets) ? sirv(paths.assets, {
+  setHeaders: (res, pathname) => {
+    if (pathname.startsWith("/_app/")) {
+      res.setHeader("cache-control", "public, max-age=31536000, immutable");
+    }
+  },
+  gzip: true,
+  brotli: true
+}) : noop_handler;
+var kitMiddleware = function() {
+  init();
+  return create_kit_middleware({ render });
+}();
+export {
+  assetsMiddleware,
+  kitMiddleware,
+  prerenderedMiddleware
+};
