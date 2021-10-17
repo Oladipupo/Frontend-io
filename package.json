@@ -14,6 +14,7 @@
 		"@sveltejs/adapter-netlify": "^1.0.0-next.33",
 		"@sveltejs/adapter-node": "^1.0.0-next.55",
 		"@sveltejs/adapter-static": "^1.0.0-next.21",
+		"@sveltejs/adapter-vercel": "^1.0.0-next.0",
 		"@sveltejs/kit": "next",
 		"@types/jquery": "^3.5.6",
 		"autoprefixer": "^10.3.4",
