@@ -1,0 +1,1 @@
+import{C as t}from"./vendor-0d868d72.js";const n=t([]),i=async()=>{const s=(await(await fetch("https://backend.oladipupo.io/api/v1/getart")).json()).map((e,r)=>({name:e.name,img:e.img,des:e.des,link:e.link}));n.set(s)};i();export{n as p};
