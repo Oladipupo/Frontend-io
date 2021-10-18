@@ -1,6 +1,6 @@
 import { writable } from "svelte/store";
 const fetchProjects = async () =>{
-    const url = "https://oladipupo.io/api/v1/getproject";
+    const url = "https://backend.oladipupo.io/api/v1/getproject";
     const res = await fetch(url);
     const data = await res.json();
     const loadedProjects = data.map((data) => {

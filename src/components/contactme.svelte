@@ -12,7 +12,7 @@
     $: sent = false;
 
     async function send(){
-        await fetch("http://127.0.0.1:8080/api/v1/sendContact", {
+        await fetch("http://backend.oladipupo.io/api/v1/sendContact", {
             method:"Post",
             mode: 'no-cors',
             credentials: 'omit',
