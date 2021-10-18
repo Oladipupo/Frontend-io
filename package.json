@@ -12,6 +12,7 @@
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-node": "^1.0.0-next.55",
+		"@sveltejs/adapter-static": "^1.0.0-next.21",
 		"@sveltejs/adapter-vercel": "^1.0.0-next.31",
 		"@sveltejs/kit": "next",
 		"@types/jquery": "^3.5.6",
@@ -33,6 +34,7 @@
 	"type": "module",
 	"dependencies": {
 		"@sendinblue/client": "^3.0.1",
+		"nginx": "^1.0.3",
 		"sib-api-v3-sdk": "^8.2.1",
 		"sib-api-v3-typescript": "^2.2.2"
 	}
